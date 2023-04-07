@@ -23,8 +23,7 @@ func showClip(w http.ResponseWriter, r *http.Request) {
 func createClip(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
-		w.WriteHeader(405) // It is possible to call WriteHeader() once per response
-		w.Write([]byte("Method Not Allowed"))
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
