@@ -18,7 +18,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	files := []string{
 		"./ui/html/home.page.tmpl",
+		"./ui/html/main.page.tmpl",
 		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
 	}
 
 	// Use the template.ParseFiles() to read the template file into a
@@ -37,8 +39,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		http.Error(w, "Could not execute template set", http.StatusInternalServerError)
 	}
-
-	w.Write([]byte("Clip 'n Go!"))
 }
 
 func showClip(w http.ResponseWriter, r *http.Request) {
