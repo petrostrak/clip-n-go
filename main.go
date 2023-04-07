@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Define a home handler function which writes a byte slice containing
@@ -17,7 +19,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func showClip(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display a specific clip..."))
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, "Could not parse query parameter", http.StatusBadRequest)
+	}
+	fmt.Fprintf(w, "Display a specific clip with ID: %d", id)
 }
 
 func createClip(w http.ResponseWriter, r *http.Request) {
