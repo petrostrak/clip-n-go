@@ -8,21 +8,33 @@ import (
 	"os"
 )
 
+// Define an application struct to hold the application-wide dependencies
+// for the web application.
+type application struct {
+	errorLog *log.Logger
+	infoLog  *log.Logger
+}
+
 func main() {
 
-	// Define a new command-line flag, with the default value of 8080
+	// Define a new command-line flag, with the default value of 8080.
 	addr := flag.Int("addr", 8080, "HTTP network address")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "[INFO]\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "[ERROR]\t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	app := &application{
+		errorLog,
+		infoLog,
+	}
+
 	// Use the http.NewServeMux() to initialize a new servemux, then
 	// register the home() as the handler for the "/" URL pattern.
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/clip", showClip)
-	mux.HandleFunc("/clip/create", createClip)
+	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/clip", app.showClip)
+	mux.HandleFunc("/clip/create", app.createClip)
 
 	// Create a fileserver which serves files out of the "./ui/static" dir.
 	fs := http.FileServer(http.Dir("./ui/static/"))
