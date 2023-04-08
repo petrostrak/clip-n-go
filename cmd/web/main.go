@@ -1,11 +1,18 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 )
 
 func main() {
+
+	// Define a new command-line flag, with the default value of 8080
+	addr := flag.Int("addr", 8080, "HTTP network address")
+	flag.Parse()
+
 	// Use the http.NewServeMux() to initialize a new servemux, then
 	// register the home() as the handler for the "/" URL pattern.
 	mux := http.NewServeMux()
@@ -21,10 +28,10 @@ func main() {
 	// the "/static" prefix before the request reaches the file server.
 	mux.Handle("/static/", http.StripPrefix("/static", fs))
 
-	log.Println("Starting server on: 8080")
+	log.Printf("Starting server on: %d.\n", *addr)
 	// Use the http.ListenAndServe() to start a new web server. We pass in
 	// the TCP network address to listen on and the servemux.
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", *addr), mux); err != nil {
 		log.Fatal(err)
 	}
 }
