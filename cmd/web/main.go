@@ -32,10 +32,16 @@ func main() {
 	// the "/static" prefix before the request reaches the file server.
 	mux.Handle("/static/", http.StripPrefix("/static", fs))
 
+	srv := &http.Server{
+		Addr:     fmt.Sprintf(":%d", *addr),
+		ErrorLog: errorLog,
+		Handler:  mux,
+	}
+
 	infoLog.Printf("Starting server on: %d.\n", *addr)
 	// Use the http.ListenAndServe() to start a new web server. We pass in
 	// the TCP network address to listen on and the servemux.
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", *addr), mux); err != nil {
+	if err := srv.ListenAndServe(); err != nil {
 		errorLog.Fatal(err)
 	}
 }
