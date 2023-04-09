@@ -9,6 +9,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/petrostrak/clip-n-go/pkg/models/mysql"
 )
 
 // Define an application struct to hold the application-wide dependencies
@@ -16,6 +17,7 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	clips    *mysql.ClipModel
 }
 
 func main() {
@@ -36,6 +38,7 @@ func main() {
 	app := &application{
 		errorLog,
 		infoLog,
+		&mysql.ClipModel{DB: db},
 	}
 
 	srv := &http.Server{
