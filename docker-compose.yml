@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  mariadb:
+    image: 'mariadb:10.11'
+    container_name: mariadb_docker
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: clips
+      MYSQL_USER: web
+      MYSQL_PASSWORD: pass
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+          # copy the sql script to drop tables
+          - ./db/migration/000001_init_schema.down.sql:/docker-entrypoint-initdb.d/migrationdown.sql
+          # copy the sql script to create tables
+          - ./db/migration/000001_init_schema.up.sql:/docker-entrypoint-initdb.d/migrationup.sql
