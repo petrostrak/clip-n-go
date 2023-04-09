@@ -5,7 +5,7 @@ services:
     container_name: mariadb_docker
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: clips
+      MYSQL_DATABASE: clipngo
       MYSQL_USER: web
       MYSQL_PASSWORD: pass
     restart: always
