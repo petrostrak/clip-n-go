@@ -17,7 +17,6 @@ type application struct {
 
 func main() {
 
-	// Define a new command-line flag, with the default value of 8080.
 	addr := flag.Int("addr", 8080, "HTTP network address")
 	flag.Parse()
 
@@ -29,30 +28,14 @@ func main() {
 		infoLog,
 	}
 
-	// Use the http.NewServeMux() to initialize a new servemux, then
-	// register the home() as the handler for the "/" URL pattern.
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/clip", app.showClip)
-	mux.HandleFunc("/clip/create", app.createClip)
-
-	// Create a fileserver which serves files out of the "./ui/static" dir.
-	fs := http.FileServer(http.Dir("./ui/static/"))
-
-	// Use the mux.Handle() to register the file server as the handler for
-	// all URL paths that start with "/static/". For matching paths, we strip
-	// the "/static" prefix before the request reaches the file server.
-	mux.Handle("/static/", http.StripPrefix("/static", fs))
-
 	srv := &http.Server{
 		Addr:     fmt.Sprintf(":%d", *addr),
 		ErrorLog: errorLog,
-		Handler:  mux,
+		Handler:  app.routes(),
 	}
 
 	infoLog.Printf("Starting server on: %d.\n", *addr)
-	// Use the http.ListenAndServe() to start a new web server. We pass in
-	// the TCP network address to listen on and the servemux.
+
 	if err := srv.ListenAndServe(); err != nil {
 		errorLog.Fatal(err)
 	}
