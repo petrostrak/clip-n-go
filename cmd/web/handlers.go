@@ -7,9 +7,9 @@ import (
 	"strconv"
 )
 
-func (a *application) home(w http.ResponseWriter, r *http.Request) {
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		app.notFound(w)
 		return
 	}
 
@@ -24,8 +24,7 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 	// template set.
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		a.errorLog.Println(err.Error())
-		http.Error(w, "Could not parse template file", http.StatusInternalServerError)
+		app.serverError(w, err)
 		return
 	}
 
@@ -33,23 +32,22 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 	// content as the response body. The last parameter to Execute() represents
 	// any dynamic data that we may want to pass.
 	if err = ts.Execute(w, nil); err != nil {
-		a.errorLog.Println(err.Error())
-		http.Error(w, "Could not execute template set", http.StatusInternalServerError)
+		app.serverError(w, err)
 	}
 }
 
-func (a *application) showClip(w http.ResponseWriter, r *http.Request) {
+func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
-		http.Error(w, "Could not parse query parameter", http.StatusBadRequest)
+		app.notFound(w)
 	}
 	fmt.Fprintf(w, "Display a specific clip with ID: %d", id)
 }
 
-func (a *application) createClip(w http.ResponseWriter, r *http.Request) {
+func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
 
