@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/petrostrak/clip-n-go/pkg/models"
 )
@@ -29,7 +30,26 @@ func (m *ClipModel) Insert(title, content, expires string) (int, error) {
 }
 
 func (m *ClipModel) Get(id int) (*models.Clip, error) {
-	return nil, nil
+	stmt := `SELECT id, title, content, created, expires FROM clips
+	WHERE expires > UTC_TIMESTAMP() AND id = ?`
+
+	clip := &models.Clip{}
+	row := m.DB.QueryRow(stmt, id)
+	err := row.Scan(
+		&clip.ID,
+		&clip.Title,
+		&clip.Content,
+		&clip.Created,
+		&clip.Expires,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+	return clip, nil
 }
 
 func (m *ClipModel) Latest() ([]*models.Clip, error) {

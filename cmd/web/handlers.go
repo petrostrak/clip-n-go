@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"github.com/petrostrak/clip-n-go/pkg/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +44,17 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.notFound(w)
 	}
-	fmt.Fprintf(w, "Display a specific clip with ID: %d", id)
+	clip, err := app.clips.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "%v", clip)
 }
 
 func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
