@@ -34,8 +34,7 @@ func (m *ClipModel) Get(id int) (*models.Clip, error) {
 	WHERE expires > UTC_TIMESTAMP() AND id = ?`
 
 	clip := &models.Clip{}
-	row := m.DB.QueryRow(stmt, id)
-	err := row.Scan(
+	err := m.DB.QueryRow(stmt, id).Scan(
 		&clip.ID,
 		&clip.Title,
 		&clip.Content,
