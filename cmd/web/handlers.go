@@ -51,5 +51,17 @@ func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Create a new clip...")) // Write will automatically send 200 OK if no WriteHeader() called
+	title := "二十一世紀編"
+	content := `一、公元2005年，趙紫陽去世這一年，公民大眾維權事件達到
+	了前所未有的高峰。全年八萬多起，每五分鐘一起。中國進入了民
+	眾維權的時代- 鮑彤文集`
+	expires := "7"
+
+	id, err := app.clips.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/clip?id=%d", id), http.StatusSeeOther)
 }
