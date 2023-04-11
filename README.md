@@ -4,7 +4,7 @@ A web application called Clip 'n Go which lets people paste and share snippets o
 ### Features
 
 - Authentication. Users can register and sign in.
-- Protected endpoints. Only signed-in users can create snippets.
+- Protected endpoints. Only signed-in users can create clips.
 - RESTful routing.
 - Middleware.
 - MySQL database.

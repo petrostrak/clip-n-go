@@ -54,7 +54,21 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%v", clip)
+	files := []string{
+		"./ui/html/show.page.tmpl",
+		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	if err = ts.Execute(w, clip); err != nil {
+		app.serverError(w, err)
+	}
 }
 
 func (app *application) createClip(w http.ResponseWriter, r *http.Request) {

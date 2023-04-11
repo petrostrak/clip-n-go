@@ -1,6 +1,6 @@
 -- Create a new UTF-8 `clipngo` database.
 CREATE DATABASE IF NOT EXISTS clipngo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- Switch to using the `snippetbox` database.
+-- Switch to using the `clipngo` database.
 USE clipngo;
 
 -- Create a `clips` table.
