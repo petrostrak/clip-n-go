@@ -16,9 +16,16 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	clip, err := app.clips.Latest()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := &templateData{Clips: clip}
+
 	files := []string{
 		"./ui/html/home.page.tmpl",
-		"./ui/html/main.page.tmpl",
 		"./ui/html/base.layout.tmpl",
 		"./ui/html/footer.partial.tmpl",
 	}
@@ -34,7 +41,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// We then use the Execute() on the template set to write the template
 	// content as the response body. The last parameter to Execute() represents
 	// any dynamic data that we may want to pass.
-	if err = ts.Execute(w, nil); err != nil {
+	if err = ts.Execute(w, data); err != nil {
 		app.serverError(w, err)
 	}
 }
