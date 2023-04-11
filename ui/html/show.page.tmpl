@@ -1,17 +1,17 @@
 {{template "base" .}}
 
-{{define "title"}}Clip #{{.ID}}{{end}}
+{{define "title"}}Clip #{{.Clip.ID}}{{end}}
 
 {{define "main"}}
 <div class="clip">
     <div class="metadata">
-        <strong>{{.Title}}</strong>
-        <span>#{{.ID}}</span>
+        <strong>{{.Clip.Title}}</strong>
+        <span>#{{.Clip.ID}}</span>
     </div>
-    <pre><code>{{.Content}}</code></pre>
+    <pre><code>{{.Clip.Content}}</code></pre>
     <div class="metadata">
-        <time>Created: {{.Created}}</time>
-        <time>Expires: {{.Expires}}</time>
+        <time>Created: {{.Clip.Created}}</time>
+        <time>Expires: {{.Clip.Expires}}</time>
     </div>
 </div>
 

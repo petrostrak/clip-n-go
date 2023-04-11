@@ -54,6 +54,8 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := &templateData{Clip: clip}
+
 	files := []string{
 		"./ui/html/show.page.tmpl",
 		"./ui/html/base.layout.tmpl",
@@ -66,7 +68,7 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = ts.Execute(w, clip); err != nil {
+	if err = ts.Execute(w, data); err != nil {
 		app.serverError(w, err)
 	}
 }
