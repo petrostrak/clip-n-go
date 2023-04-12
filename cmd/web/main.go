@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -15,9 +16,10 @@ import (
 // Define an application struct to hold the application-wide dependencies
 // for the web application.
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	clips    *mysql.ClipModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	clips         *mysql.ClipModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -35,10 +37,16 @@ func main() {
 	}
 	defer db.Close()
 
+	templateCache, err := newTemplateCache("./ui/html")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
 		errorLog,
 		infoLog,
 		&mysql.ClipModel{DB: db},
+		templateCache,
 	}
 
 	srv := &http.Server{
