@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -22,28 +21,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := &templateData{Clips: clip}
-
-	files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	// Use the template.ParseFiles() to read the template file into a
-	// template set.
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	// We then use the Execute() on the template set to write the template
-	// content as the response body. The last parameter to Execute() represents
-	// any dynamic data that we may want to pass.
-	if err = ts.Execute(w, data); err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, r, "home.page.tmpl", &templateData{Clips: clip})
 }
 
 func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
@@ -61,23 +39,7 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := &templateData{Clip: clip}
-
-	files := []string{
-		"./ui/html/show.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	if err = ts.Execute(w, data); err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, r, "show.page.tmpl", &templateData{Clip: clip})
 }
 
 func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
