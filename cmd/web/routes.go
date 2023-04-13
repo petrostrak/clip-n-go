@@ -2,7 +2,7 @@ package main
 
 import "net/http"
 
-func (app *application) routes() *http.ServeMux {
+func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", app.home)
 	mux.HandleFunc("/clip", app.showClip)
@@ -11,5 +11,6 @@ func (app *application) routes() *http.ServeMux {
 	fs := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fs))
 
-	return mux
+	// Pass the servemux as the 'next' parameter to the secureHeaders middleware.
+	return secureHeaders(mux)
 }
