@@ -40,12 +40,15 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 
-	title := "二十一世紀編"
-	content := `一、公元2005年，趙紫陽去世這一年，公民大眾維權事件達到
-	了前所未有的高峰。全年八萬多起，每五分鐘一起。中國進入了民
-	眾維權的時代- 鮑彤文集`
-	expires := "7"
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+	expires := r.PostForm.Get("expires")
 
 	id, err := app.clips.Insert(title, content, expires)
 	if err != nil {
