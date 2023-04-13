@@ -57,5 +57,5 @@ func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createClipForm(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Create a new clip"))
+	app.render(w, r, "create.page.tmpl", nil)
 }
