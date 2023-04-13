@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"github.com/petrostrak/clip-n-go/pkg/models"
 )
@@ -11,6 +12,12 @@ type templateData struct {
 	CurrentYear int
 	Clip        *models.Clip
 	Clips       []*models.Clip
+}
+
+// This is a string-keyed map which acts as a lookup between the names of
+// our custom template functions and the functions themselves.
+var funcs = template.FuncMap{
+	"humanDate": humanDate,
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
@@ -27,8 +34,9 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		// Extract the file name.
 		name := filepath.Base(page)
 
-		// Parse page template
-		ts, err := template.ParseFiles(page)
+		// The template.FuncMap must be registered with the template set before you
+		// call the ParseFiles().
+		ts, err := template.New(name).Funcs(funcs).ParseFiles(page)
 		if err != nil {
 			return nil, err
 		}
@@ -49,4 +57,8 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+func humanDate(t time.Time) string {
+	return t.Format("02 Jan 2006 at 15:04")
 }
