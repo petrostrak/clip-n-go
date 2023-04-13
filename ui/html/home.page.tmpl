@@ -13,7 +13,7 @@
             </tr>
             {{range .Clips}}
                 <tr>
-                    <td><a href='clip?id={{.ID}}'>{{.Title}}</a></td>
+                    <td><a href='clip/{{.ID}}'>{{.Title}}</a></td>
                     <td>{{.Created | humanDate}}</td>
                     <td>#{{.ID}}</td>
                 </tr>

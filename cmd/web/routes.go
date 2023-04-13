@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/justinas/alice"
 )
 
@@ -10,13 +11,14 @@ func (app *application) routes() http.Handler {
 	// standardMiddleware is being used for every request our app receives.
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/clip", app.showClip)
-	mux.HandleFunc("/clip/create", app.createClip)
+	r := chi.NewRouter()
+	r.Get("/", app.home)
+	r.Get("/clip/{id}", app.showClip)
+	r.Get("/clip/create", app.createClipForm)
+	r.Post("/clip/create", app.createClip)
 
 	fs := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fs))
+	r.Get("/static/*", http.StripPrefix("/static", fs).(http.HandlerFunc))
 
-	return standardMiddleware.Then(mux)
+	return standardMiddleware.Then(r)
 }
