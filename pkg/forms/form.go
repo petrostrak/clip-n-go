@@ -62,6 +62,6 @@ func (f *Form) PermittedValues(field string, opts ...string) {
 }
 
 // isValid returns true if there is no error.
-func (f *Form) isValid() bool {
+func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
 }
