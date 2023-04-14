@@ -20,7 +20,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 
 	// Write the template to the buffer first, instead of straight to the w, and if
 	// there is an error return.
-	if err := ts.Execute(buf, addDefaultData(td, r)); err != nil {
+	if err := ts.Execute(buf, app.addDefaultData(td, r)); err != nil {
 		app.serverError(w, err)
 	}
 
@@ -28,11 +28,12 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	buf.WriteTo(w)
 }
 
-func addDefaultData(td *templateData, r *http.Request) *templateData {
+func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
 	if td == nil {
 		td = &templateData{}
 	}
 	td.CurrentYear = time.Now().Year()
+	td.Flash = app.Session.PopString(r.Context(), "flash")
 
 	return td
 }

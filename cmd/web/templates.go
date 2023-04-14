@@ -14,6 +14,7 @@ type templateData struct {
 	Form        *forms.Form
 	Clip        *models.Clip
 	Clips       []*models.Clip
+	Flash       string
 }
 
 // This is a string-keyed map which acts as a lookup between the names of

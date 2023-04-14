@@ -37,7 +37,9 @@ func (app *application) showClip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, r, "show.page.tmpl", &templateData{Clip: clip})
+	app.render(w, r, "show.page.tmpl", &templateData{
+		Clip: clip,
+	})
 }
 
 func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
@@ -64,6 +66,8 @@ func (app *application) createClip(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	app.Session.Put(r.Context(), "flash", "Clip successfully created!")
 
 	http.Redirect(w, r, fmt.Sprintf("/clip/%d", id), http.StatusSeeOther)
 }
