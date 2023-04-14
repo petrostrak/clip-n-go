@@ -9,8 +9,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/alexedwards/scs/v2"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/petrostrak/clip-n-go/pkg/models/mysql"
+	"github.com/petrostrak/clip-n-go/session"
 )
 
 // Define an application struct to hold the application-wide dependencies
@@ -20,12 +22,14 @@ type application struct {
 	infoLog       *log.Logger
 	clips         *mysql.ClipModel
 	templateCache map[string]*template.Template
+	Session       *scs.SessionManager
 }
 
 func main() {
 
 	addr := flag.Int("addr", 8080, "HTTP network address")
 	dns := flag.String("dns", "web:pass@/clipngo?parseTime=true", "MySQL data source name")
+	// secret := flag.String("secret", "mwY9HC+iHs993yzc9kZHKKMmPh+ipPFC", "Secret key")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "[INFO]\t", log.Ldate|log.Ltime)
@@ -42,11 +46,20 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	session := session.Session{
+		CookieName:     "clipngo",
+		CookieLifetime: "1",
+		CookiePersist:  "true",
+		CookieSecure:   "false",
+		CookieDomain:   "localhost",
+	}
+
 	app := &application{
 		errorLog,
 		infoLog,
 		&mysql.ClipModel{DB: db},
 		templateCache,
+		session.InitSession(),
 	}
 
 	srv := &http.Server{

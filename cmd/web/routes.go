@@ -20,5 +20,5 @@ func (app *application) routes() http.Handler {
 	fs := http.FileServer(http.Dir("./ui/static/"))
 	r.Get("/static/*", http.StripPrefix("/static", fs).(http.HandlerFunc))
 
-	return standardMiddleware.Then(r)
+	return standardMiddleware.Then(app.Session.LoadAndSave(r))
 }
