@@ -44,3 +44,24 @@ func (f *Form) MaxLength(field string, d int) {
 		f.Errors.Add(field, fmt.Sprintf("This field is too long (maximum is %d characters)", d))
 	}
 }
+
+// PermittedValues checks that a specific field in the form matches one of a set
+// of specific permitted values.If a field fails this check, add the appropriate
+// message to the form errors.
+func (f *Form) PermittedValues(field string, opts ...string) {
+	value := f.Get(field)
+	if value == "" {
+		return
+	}
+	for _, opt := range opts {
+		if value == opt {
+			return
+		}
+	}
+	f.Errors.Add(field, "This field is invalid")
+}
+
+// isValid returns true if there is no error.
+func (f *Form) isValid() bool {
+	return len(f.Errors) == 0
+}
