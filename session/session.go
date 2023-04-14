@@ -1,13 +1,14 @@
 package session
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/alexedwards/scs/mysqlstore"
 	"github.com/alexedwards/scs/v2"
-	"github.com/alexedwards/scs/v2/memstore"
 )
 
 type Session struct {
@@ -16,6 +17,7 @@ type Session struct {
 	CookieName     string
 	CookieDomain   string
 	CookieSecure   string
+	SessionType    *sql.DB
 }
 
 func (s *Session) InitSession() *scs.SessionManager {
@@ -23,7 +25,7 @@ func (s *Session) InitSession() *scs.SessionManager {
 
 	mins, err := strconv.Atoi(s.CookieLifetime)
 	if err != nil {
-		mins = 60
+		mins = 5
 	}
 
 	if strings.ToLower(s.CookiePersist) == "true" {
@@ -41,7 +43,7 @@ func (s *Session) InitSession() *scs.SessionManager {
 	session.Cookie.Secure = secure
 	session.Cookie.Domain = s.CookieDomain
 	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Store = memstore.New()
+	session.Store = mysqlstore.New(s.SessionType)
 
 	return session
 }

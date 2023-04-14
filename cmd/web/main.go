@@ -48,10 +48,11 @@ func main() {
 
 	session := session.Session{
 		CookieName:     "clipngo",
-		CookieLifetime: "1",
+		CookieLifetime: "5",
 		CookiePersist:  "true",
 		CookieSecure:   "false",
 		CookieDomain:   "localhost",
+		SessionType:    db,
 	}
 
 	app := &application{

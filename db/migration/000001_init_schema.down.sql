@@ -1,1 +1,2 @@
 DROP TABLE IF EXISTS clipngo;
+DROP TABLE IF EXISTS sessions;
