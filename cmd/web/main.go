@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/alexedwards/scs/v2"
 	_ "github.com/go-sql-driver/mysql"
@@ -70,10 +71,13 @@ func main() {
 	}
 
 	srv := &http.Server{
-		Addr:      fmt.Sprintf(":%d", *addr),
-		ErrorLog:  errorLog,
-		Handler:   app.routes(),
-		TLSConfig: tlsConfig,
+		Addr:         fmt.Sprintf(":%d", *addr),
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		TLSConfig:    tlsConfig,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	infoLog.Printf("Starting server on: %d.\n", *addr)
