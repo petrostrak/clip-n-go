@@ -23,6 +23,7 @@ type application struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
 	clips         *mysql.ClipModel
+	users         *mysql.UserModel
 	templateCache map[string]*template.Template
 	Session       *scs.SessionManager
 }
@@ -61,6 +62,7 @@ func main() {
 		errorLog,
 		infoLog,
 		&mysql.ClipModel{DB: db},
+		&mysql.UserModel{DB: db},
 		templateCache,
 		session.InitSession(),
 	}
