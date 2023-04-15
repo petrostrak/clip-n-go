@@ -17,6 +17,12 @@ func (app *application) routes() http.Handler {
 	r.Get("/clip/create", app.createClipForm)
 	r.Post("/clip/create", app.createClip)
 
+	r.Get("/user/signup", app.signupUserForm)
+	r.Post("/user/signup", app.signupUser)
+	r.Get("/user/login", app.loginUserForm)
+	r.Post("/user/login", app.loginUser)
+	r.Post("/user/logout", app.logoutUser)
+
 	fs := http.FileServer(http.Dir("./ui/static/"))
 	r.Get("/static/*", http.StripPrefix("/static", fs).(http.HandlerFunc))
 
