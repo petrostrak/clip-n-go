@@ -13,7 +13,7 @@ type Form struct {
 	Errors errors
 }
 
-var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+var EmailRX = regexp.MustCompile(`^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$`)
 
 // New initializes a custom Form struct.
 func New(data url.Values) *Form {
@@ -77,7 +77,7 @@ func (f *Form) MinLength(field string, d int) {
 	if value == "" {
 		return
 	}
-	if utf8.RuneCountInString(value) > d {
+	if utf8.RuneCountInString(value) < d {
 		f.Errors.Add(field, fmt.Sprintf("This field is too short (minimum is %d characters)", d))
 	}
 }
