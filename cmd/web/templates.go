@@ -16,6 +16,7 @@ type templateData struct {
 	Clips           []*models.Clip
 	Flash           string
 	IsAuthenticated bool
+	CSRFToken       string
 }
 
 // This is a string-keyed map which acts as a lookup between the names of
