@@ -10,11 +10,12 @@ import (
 )
 
 type templateData struct {
-	CurrentYear int
-	Form        *forms.Form
-	Clip        *models.Clip
-	Clips       []*models.Clip
-	Flash       string
+	CurrentYear     int
+	Form            *forms.Form
+	Clip            *models.Clip
+	Clips           []*models.Clip
+	Flash           string
+	IsAuthenticated bool
 }
 
 // This is a string-keyed map which acts as a lookup between the names of
