@@ -9,7 +9,7 @@ import (
 
 func (app *application) routes() http.Handler {
 	r := chi.NewRouter()
-	r.Use(app.recoverPanic, app.logRequest, secureHeaders, noSurf)
+	r.Use(app.recoverPanic, app.logRequest, secureHeaders, noSurf, app.authenticate)
 
 	r.Get("/", app.home)
 

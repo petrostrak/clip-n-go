@@ -17,6 +17,10 @@ import (
 	"github.com/petrostrak/clip-n-go/session"
 )
 
+type contextKey string
+
+const contextKeyIsAuthenticated = contextKey("isAuthenticated")
+
 // Define an application struct to hold the application-wide dependencies
 // for the web application.
 type application struct {
