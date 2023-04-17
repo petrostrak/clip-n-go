@@ -57,3 +57,9 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 func (app *application) notFound(w http.ResponseWriter) {
 	app.clientError(w, http.StatusNotFound)
 }
+
+// isAuthenticated returns true if the current request is from authenticated user, otherwise
+// returns false.
+func (app *application) isAuthenticated(r *http.Request) bool {
+	return app.Session.Exists(r.Context(), "authenticatedUserID")
+}
